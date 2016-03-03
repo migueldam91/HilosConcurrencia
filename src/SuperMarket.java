@@ -2,15 +2,18 @@ import java.util.Random;
 
 public class SuperMarket {
 	public static void main(String[] args) throws InterruptedException {
-		Cola cola = new Cola();
+		
 //		int N = Integer.parseInt(args[0]);
-		int N=10;
+		int N=2;
 		Caja cajas[] = new Caja[N];
+		//Modern
+		Cola cola = new Cola(N);
+		
 		for (int i = 0; i < N; i++) {
 			cajas[i] = new Caja();
 		}
 //		int M = Integer.parseInt(args[1]);
-		int M = 100;
+		int M = 10;
 		Cliente clientes[] = new Cliente[M];
 		for (int j, i = 0; i < M; i++) {
 			// Seleccionamos ya en qué caja se situara

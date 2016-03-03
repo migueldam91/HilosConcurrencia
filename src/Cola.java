@@ -1,17 +1,20 @@
+import java.util.Arrays;
 import java.util.Random;
 
 
 public class Cola {
 	private static final int MAX_TIME = 1000;
-	private Caja[] cajas;
+	private static final int NOENCONTRADO=-1;
+	boolean []cajasDisponible;
 	class Nodo {
 		int cliente;
 		Nodo sig;
 	}
 
 	Nodo raiz, fondo;
-	public Cola(){
-		
+	public Cola(int numCajas){
+		cajasDisponible = new boolean[numCajas];
+		Arrays.fill(cajasDisponible, Boolean.TRUE);
 	}
 	
 	private boolean vacia() {
@@ -20,12 +23,26 @@ public class Cola {
 		else
 			return false;
 	}
-	
-	synchronized public void esperar(int id_cliente) throws InterruptedException {
+	//Itera por el array de disponibilidad de las cajas
+	private int checkCajaLibre(){
+		int numCaja=NOENCONTRADO;
+		boolean cajaLibreEncontrada=false;
+		for (int i=0; i<cajasDisponible.length&& !cajaLibreEncontrada;i++){	
+			if(cajasDisponible[i]==true){
+				numCaja=i;
+				cajaLibreEncontrada=true;
+			}
+		}
+		return numCaja;
+	}
+	int indiceCajaLibre;
+	synchronized public int esperar(int id_cliente) throws InterruptedException {
 		Nodo nuevo;
 		nuevo = new Nodo();
 		nuevo.cliente = id_cliente;
 		nuevo.sig = null;
+		
+		indiceCajaLibre=-12;
 		if (vacia()) {
 			raiz = nuevo;
 			fondo = nuevo;
@@ -33,13 +50,15 @@ public class Cola {
 			fondo.sig = nuevo;
 			fondo = nuevo;
 		}
-		while (raiz.cliente != id_cliente) {
+		indiceCajaLibre=checkCajaLibre();
+		while (raiz.cliente != id_cliente && indiceCajaLibre!=NOENCONTRADO) {
 			// Me bloqueo hasta que sea mi turno
 			wait();
 		}
+		return indiceCajaLibre;
 	}
-
-	synchronized public void atender(int pago) throws InterruptedException {
+//	cajasDisponible[i]=false;
+	synchronized public void atender(int pago,int numCaja) throws InterruptedException {
 
 		if (raiz == fondo) {
 			raiz = null;
@@ -50,7 +69,13 @@ public class Cola {
 			raiz = raiz.sig;
 		}
 		int tiempo_atencion = new Random().nextInt(MAX_TIME);
+		
+		cajasDisponible[numCaja]=false;
+		//Tiempo atención con la cajera
 		Thread.sleep(tiempo_atencion);
+		cajasDisponible[numCaja]=true;
+		System.out.println("Soy "+pago+"Acabo de salir de la caja");
+		
 		Resultados.ganancias += pago;
 		Resultados.clientes_atendidos++;
 		// "Despierta" a un cliente de la misma caja que haya salido del while

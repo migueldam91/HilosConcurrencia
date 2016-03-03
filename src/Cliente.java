@@ -2,7 +2,7 @@ import java.util.Random;
 
 class Cliente extends Thread {
 	// Tiempo máximo que tarda el cliente en hacer la compra.
-private static final int MAX_DELAY = 2000;
+	private static final int MAX_DELAY = 2000;
 	private static final int MAX_COST = 100;
 	private int id;
 	private Caja caja;
@@ -20,12 +20,16 @@ private static final int MAX_DELAY = 2000;
 			Thread.sleep(new Random().nextInt(MAX_DELAY));
 			long s = System.currentTimeMillis();
 			//Caja actúa como nexo de sincronización entre todos los objetos que lo poseen.
-			caja.esperar(id);
+//			Modern
+			//caja.esperar(id);
+			int numCaja= cola.esperar(id);
+			
 			System.out.print("Cliente " + id + " en cola con ");
-			
-			caja.imprimir();
-			
-			caja.atender(new Random().nextInt(MAX_COST));
+//			Modern
+//			caja.imprimir();
+			cola.imprimir();
+//			caja.atender(new Random().nextInt(MAX_COST));
+			cola.atender(new Random().nextInt(MAX_COST), numCaja);
 			System.out.println("Cliente " + id + " atendido");
 			long espera = System.currentTimeMillis() - s;
 			Resultados.tiempo_espera += espera;
