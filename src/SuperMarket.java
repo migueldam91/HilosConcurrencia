@@ -5,7 +5,7 @@ public class SuperMarket {
 	public static void main(String[] args) throws InterruptedException {
 		
 //		int N = Integer.parseInt(args[0]);
-		int N=4;
+		int N=30;
 		Caja cajas[] = new Caja[N];
 		//Modern
 		Cola cola = new Cola(N);
@@ -14,7 +14,7 @@ public class SuperMarket {
 			cajas[i] = new Caja();
 		}
 //		int M = Integer.parseInt(args[1]);
-		int M =20;
+		int M =100;
 		Cliente clientes[] = new Cliente[M];
 		for (int j, i = 0; i < M; i++) {
 			// Seleccionamos ya en qué caja se situara

@@ -69,11 +69,12 @@ public class Cola {
 		boolean encendido=true;
 		while (encendido){
 			indiceCajaLibre=checkCajaLibre();
-			if(indiceCajaLibre==NOENCONTRADO || raiz.cliente== id_cliente){
-				wait();
-			}else{
-				encendido=false;
-				return indiceCajaLibre;
+			if(indiceCajaLibre==NOENCONTRADO ){
+				if(raiz.cliente!= id_cliente)
+					wait();
+				}else{
+					encendido=false;
+					return indiceCajaLibre;
 			}
 			
 		}
