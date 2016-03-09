@@ -15,7 +15,7 @@ class Cliente extends Thread {
 	}
 	public void run() {
 		try {
-			System.out.println("Cliente " + id + " realizando compra");
+			//System.out.println("Cliente " + id + " realizando compra");
 			//Tiempo que está haciendo la compra
 			Thread.sleep(new Random().nextInt(MAX_DELAY));
 			long s = System.currentTimeMillis();
@@ -30,10 +30,10 @@ class Cliente extends Thread {
 			cola.imprimir();
 //			caja.atender(new Random().nextInt(MAX_COST));
 			cola.atender(new Random().nextInt(MAX_COST), numCaja);
-			System.out.println("Cliente " + id + " atendido");
+			System.out.println("Cliente " + id + " atendido en " + numCaja);
 			long espera = System.currentTimeMillis() - s;
 			Resultados.tiempo_espera += espera;
-			System.out.println("Cliente " + id + " saliendo después de esperar " + espera);
+			//System.out.println("Cliente " + id + " saliendo después de esperar " + espera);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
