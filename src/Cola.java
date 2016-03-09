@@ -30,23 +30,24 @@ public class Cola {
 			return false;
 	}
 	//Itera por el array de disponibilidad de las cajas
-	private int checkCajaLibre(){
+	public int checkCajaLibre(){
 		int numCaja=NOENCONTRADO;
 		boolean cajaLibreEncontrada=false;
 		for (int i=0; i<cajasDisponible.length&& !cajaLibreEncontrada;i++){	
 			//System.out.println(" Caja " + i + " --> " +cajasDisponible[i] );
 			if(cajasDisponible[i]==true){
 				numCaja=i;
-				cajaLibreEncontrada=true;
-				
+				cajaLibreEncontrada=true;	
+				setDisponibilidad(false, numCaja);
 			}
 			
 		}
-		if(!cajaLibreEncontrada){
-			cajasDisponiblesisFull=true;
-		}else
-			cajasDisponiblesisFull=false;
-		return numCaja;
+//		if(!cajaLibreEncontrada){
+//			cajasDisponiblesisFull=true;
+//		}else{
+//			cajasDisponiblesisFull=false;
+//		}
+			return numCaja;
 		
 	}
 	
@@ -57,7 +58,7 @@ public class Cola {
 		nuevo.cliente = id_cliente;
 		nuevo.sig = null;
 		
-		indiceCajaLibre=-123213123;
+		
 		if (vacia()) {
 			raiz = nuevo;
 			fondo = nuevo;
@@ -65,20 +66,18 @@ public class Cola {
 			fondo.sig = nuevo;
 			fondo = nuevo;
 		}
-
-		do{
+		boolean encendido=true;
+		while (encendido){
 			indiceCajaLibre=checkCajaLibre();
-			if(raiz.cliente != id_cliente&&!cajasDisponiblesisFull)
-				return indiceCajaLibre;
-			else{ // Me bloqueo hasta que sea mi turno
+			if(indiceCajaLibre==NOENCONTRADO || raiz.cliente== id_cliente){
 				wait();
-				System.out.println("EL CLIENTE "+ raiz.cliente + " espera en la caja "+ indiceCajaLibre);
+			}else{
+				encendido=false;
+				return indiceCajaLibre;
 			}
 			
-		
+		}
 		return indiceCajaLibre;
-		}while ((indiceCajaLibre=checkCajaLibre())==-1);
-			
 			
 	}
 	
@@ -92,19 +91,15 @@ public class Cola {
 			raiz = raiz.sig;
 		}
 		int tiempo_atencion = new Random().nextInt(MAX_TIME);
-		setDisponibilidad(false,numCaja);
+
 //		cajasDisponible[numCaja]=false;
 		//Tiempo atención con la cajera
-		Thread.currentThread().sleep(tiempo_atencion);
-		//cajasDisponible[numCaja]=true;
-		System.out.println("el estado de caja "+numCaja +" es "+ cajasDisponible[numCaja]);
-		//cajasDisponiblesisFull = false;
+		Thread.sleep(tiempo_atencion);
+		setDisponibilidad(true, numCaja);
 		Resultados.ganancias += pago;
 		Resultados.clientes_atendidos++;
-		// "Despierta" a un cliente de la misma caja que haya salido del while
-		// (raiz.cliente != id_cliente), es decir al que haya salido de la caja.
-		notify();
 		
+		notifyAll();
 	}
 
 	synchronized public void imprimir() {
