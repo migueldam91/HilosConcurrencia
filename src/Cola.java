@@ -5,7 +5,8 @@ import java.util.Random;
 public class Cola {
 	private static final int MAX_TIME = 1000;
 	private static final int NOENCONTRADO=-1;
-	boolean []cajasDisponible;
+	static boolean []cajasDisponible;
+	static boolean cajasDisponiblesisFull=false;
 	class Nodo {
 		int cliente;
 		Nodo sig;
@@ -16,7 +17,12 @@ public class Cola {
 		cajasDisponible = new boolean[numCajas];
 		Arrays.fill(cajasDisponible, Boolean.TRUE);
 	}
-	
+	public void setDisponibilidad(boolean disponible, int numCaja){
+		cajasDisponible[numCaja]= disponible;
+	}
+	public void setDisponibilidadCajas(boolean disponible){
+		cajasDisponiblesisFull= disponible;
+	}
 	private boolean vacia() {
 		if (raiz == null)
 			return true;
@@ -32,9 +38,16 @@ public class Cola {
 				numCaja=i;
 				cajaLibreEncontrada=true;
 			}
+			System.out.println(" Posicion cajas libres  " + i + " --> " +cajasDisponible[i] );
 		}
+		if(!cajaLibreEncontrada){
+			cajasDisponiblesisFull=true;
+		}else
+			cajasDisponiblesisFull=false;
 		return numCaja;
+		
 	}
+	
 	int indiceCajaLibre;
 	synchronized public int esperar(int id_cliente) throws InterruptedException {
 		Nodo nuevo;
@@ -42,7 +55,7 @@ public class Cola {
 		nuevo.cliente = id_cliente;
 		nuevo.sig = null;
 		
-		indiceCajaLibre=-12;
+		indiceCajaLibre=-123213123;
 		if (vacia()) {
 			raiz = nuevo;
 			fondo = nuevo;
@@ -51,13 +64,16 @@ public class Cola {
 			fondo = nuevo;
 		}
 		indiceCajaLibre=checkCajaLibre();
-		while (raiz.cliente != id_cliente && indiceCajaLibre!=NOENCONTRADO) {
+
+		while (raiz.cliente != id_cliente && cajasDisponiblesisFull) {
 			// Me bloqueo hasta que sea mi turno
 			wait();
+			indiceCajaLibre=checkCajaLibre();
+			
 		}
 		return indiceCajaLibre;
 	}
-//	cajasDisponible[i]=false;
+	
 	synchronized public void atender(int pago,int numCaja) throws InterruptedException {
 
 		if (raiz == fondo) {
@@ -72,15 +88,15 @@ public class Cola {
 		
 		cajasDisponible[numCaja]=false;
 		//Tiempo atención con la cajera
-		Thread.sleep(tiempo_atencion);
-		cajasDisponible[numCaja]=true;
-		System.out.println("Soy "+pago+"Acabo de salir de la caja");
-		
+		Thread.currentThread().sleep(tiempo_atencion);
+		//cajasDisponible[numCaja]=true;
+		System.out.println("Soy "+pago+"Acabo de salir de la caja, el estado de esta caja "+numCaja +" es "+ cajasDisponible[numCaja]);
+		//cajasDisponiblesisFull = false;
 		Resultados.ganancias += pago;
 		Resultados.clientes_atendidos++;
 		// "Despierta" a un cliente de la misma caja que haya salido del while
 		// (raiz.cliente != id_cliente), es decir al que haya salido de la caja.
-		notify();
+		notifyAll();
 	}
 
 	synchronized public void imprimir() {
