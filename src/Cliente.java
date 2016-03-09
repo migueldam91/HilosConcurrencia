@@ -24,7 +24,7 @@ class Cliente extends Thread {
 			//caja.esperar(id);
 			int numCaja= cola.esperar(id);
 			System.out.println("VALOR CAJA: " + numCaja);
-			System.out.print("Cliente " + id + " en cola con ");
+			//System.out.print("Cliente " + id + " en cola con ");
 //			Modern
 //			caja.imprimir();
 			cola.imprimir();

@@ -65,22 +65,24 @@ public class Cola {
 			fondo.sig = nuevo;
 			fondo = nuevo;
 		}
-		indiceCajaLibre=checkCajaLibre();
 
-		while ((indiceCajaLibre=checkCajaLibre())==-1 && cajasDisponiblesisFull) {
-			System.out.println("EL CLIENTE "+ raiz.cliente + " está en la caja "+ indiceCajaLibre);
-			if(raiz.cliente != id_cliente)
+		do{
+			indiceCajaLibre=checkCajaLibre();
+			if(raiz.cliente != id_cliente&&!cajasDisponiblesisFull)
 				return indiceCajaLibre;
-			else // Me bloqueo hasta que sea mi turno
+			else{ // Me bloqueo hasta que sea mi turno
 				wait();
+				System.out.println("EL CLIENTE "+ raiz.cliente + " espera en la caja "+ indiceCajaLibre);
+			}
 			
-			
-		}
+		
 		return indiceCajaLibre;
+		}while ((indiceCajaLibre=checkCajaLibre())==-1);
+			
+			
 	}
 	
 	synchronized public void atender(int pago,int numCaja) throws InterruptedException {
-
 		if (raiz == fondo) {
 			raiz = null;
 			fondo = null;
@@ -90,8 +92,8 @@ public class Cola {
 			raiz = raiz.sig;
 		}
 		int tiempo_atencion = new Random().nextInt(MAX_TIME);
-		
-		cajasDisponible[numCaja]=false;
+		setDisponibilidad(false,numCaja);
+//		cajasDisponible[numCaja]=false;
 		//Tiempo atención con la cajera
 		Thread.currentThread().sleep(tiempo_atencion);
 		//cajasDisponible[numCaja]=true;
@@ -102,7 +104,7 @@ public class Cola {
 		// "Despierta" a un cliente de la misma caja que haya salido del while
 		// (raiz.cliente != id_cliente), es decir al que haya salido de la caja.
 		notify();
-		setDisponibilidadCajas(true);
+		
 	}
 
 	synchronized public void imprimir() {
