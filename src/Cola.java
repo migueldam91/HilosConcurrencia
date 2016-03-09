@@ -87,13 +87,11 @@ public class Cola {
 			raiz = null;
 			fondo = null;
 		} else {
-			// La forma de sacar nodos de la cola es, haciéndoles pasar a ser
-			// raiz.
+			// La forma de sacar nodos de la cola es, haciéndoles pasar a serraiz.
 			raiz = raiz.sig;
 		}
 		int tiempo_atencion = new Random().nextInt(MAX_TIME);
 
-//		cajasDisponible[numCaja]=false;
 		//Tiempo atención con la cajera
 		Thread.sleep(tiempo_atencion);
 		setDisponibilidad(true, numCaja);

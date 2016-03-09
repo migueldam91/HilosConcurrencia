@@ -22,26 +22,15 @@ class Cliente extends Thread {
 			long s = System.currentTimeMillis();
 			//Caja actúa como nexo de sincronización entre todos los objetos que lo poseen.
 //			Modern
-			//caja.esperar(id);
 			int numCaja= cola.esperar(id);
-			//System.out.println("VALOR CAJA: " + numCaja);
-			//System.out.print("Cliente " + id + " en cola con ");
-//			Modern
-//			caja.imprimir();
-			
-//			caja.atender(new Random().nextInt(MAX_COST));
 			cola.atender(new Random().nextInt(MAX_COST), numCaja);
 			cola.imprimir();
 			//cola.setDisponibilidadCajas(true);
-			System.out.println("Cliente " + id + " atendido en " + numCaja +" por hilo "+ Thread.currentThread().getName());
-
+			System.out.println("Cliente " + id + " atendido en " + numCaja);
 			long espera = System.currentTimeMillis() - s;
 			Resultados.tiempo_espera += espera;
-			//System.out.println("Cliente " + id + " saliendo después de esperar " + espera);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 }
-
-//En el modern,  hay una unica cola que es el objeto que comparten todos los clientes . Esta cola contiene un puntero cola y un array de cajas.

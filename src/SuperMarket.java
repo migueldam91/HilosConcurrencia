@@ -3,8 +3,6 @@ import java.util.Random;
 
 public class SuperMarket {
 	public static void main(String[] args) throws InterruptedException {
-		
-//		int N = Integer.parseInt(args[0]);
 		int N=30;
 		Caja cajas[] = new Caja[N];
 		//Modern
@@ -13,7 +11,6 @@ public class SuperMarket {
 		for (int i = 0; i < N; i++) {
 			cajas[i] = new Caja();
 		}
-//		int M = Integer.parseInt(args[1]);
 		int M =100;
 		Cliente clientes[] = new Cliente[M];
 		for (int j, i = 0; i < M; i++) {
