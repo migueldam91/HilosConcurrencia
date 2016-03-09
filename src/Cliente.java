@@ -29,13 +29,13 @@ class Cliente extends Thread {
 //			caja.imprimir();
 			cola.imprimir();
 //			caja.atender(new Random().nextInt(MAX_COST));
-			if(numCaja!=-1){
-				cola.atender(new Random().nextInt(MAX_COST), numCaja);
-				cola.setDisponibilidadCajas(true);
-				System.out.println("Cliente " + id + " atendido en " + numCaja);
-				long espera = System.currentTimeMillis() - s;
-				Resultados.tiempo_espera += espera;
-			}
+			
+			cola.atender(new Random().nextInt(MAX_COST), numCaja);
+			//cola.setDisponibilidadCajas(true);
+			System.out.println("Cliente " + id + " atendido en " + numCaja);
+			long espera = System.currentTimeMillis() - s;
+			Resultados.tiempo_espera += espera;
+			
 			
 			//System.out.println("Cliente " + id + " saliendo después de esperar " + espera);
 		} catch (InterruptedException e) {

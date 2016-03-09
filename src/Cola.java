@@ -34,11 +34,13 @@ public class Cola {
 		int numCaja=NOENCONTRADO;
 		boolean cajaLibreEncontrada=false;
 		for (int i=0; i<cajasDisponible.length&& !cajaLibreEncontrada;i++){	
+			//System.out.println(" Caja " + i + " --> " +cajasDisponible[i] );
 			if(cajasDisponible[i]==true){
 				numCaja=i;
 				cajaLibreEncontrada=true;
+				
 			}
-			System.out.println(" Posicion cajas libres  " + i + " --> " +cajasDisponible[i] );
+			
 		}
 		if(!cajaLibreEncontrada){
 			cajasDisponiblesisFull=true;
@@ -65,10 +67,13 @@ public class Cola {
 		}
 		indiceCajaLibre=checkCajaLibre();
 
-		while (raiz.cliente != id_cliente && cajasDisponiblesisFull) {
-			// Me bloqueo hasta que sea mi turno
-			wait();
-			indiceCajaLibre=checkCajaLibre();
+		while ((indiceCajaLibre=checkCajaLibre())==-1 && cajasDisponiblesisFull) {
+			System.out.println("EL CLIENTE "+ raiz.cliente + " está en la caja "+ indiceCajaLibre);
+			if(raiz.cliente != id_cliente)
+				return indiceCajaLibre;
+			else // Me bloqueo hasta que sea mi turno
+				wait();
+			
 			
 		}
 		return indiceCajaLibre;
@@ -90,13 +95,14 @@ public class Cola {
 		//Tiempo atención con la cajera
 		Thread.currentThread().sleep(tiempo_atencion);
 		//cajasDisponible[numCaja]=true;
-		System.out.println("Soy "+pago+"Acabo de salir de la caja, el estado de esta caja "+numCaja +" es "+ cajasDisponible[numCaja]);
+		System.out.println("el estado de caja "+numCaja +" es "+ cajasDisponible[numCaja]);
 		//cajasDisponiblesisFull = false;
 		Resultados.ganancias += pago;
 		Resultados.clientes_atendidos++;
 		// "Despierta" a un cliente de la misma caja que haya salido del while
 		// (raiz.cliente != id_cliente), es decir al que haya salido de la caja.
-		notifyAll();
+		notify();
+		setDisponibilidadCajas(true);
 	}
 
 	synchronized public void imprimir() {

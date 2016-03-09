@@ -13,7 +13,7 @@ public class SuperMarket {
 			cajas[i] = new Caja();
 		}
 //		int M = Integer.parseInt(args[1]);
-		int M = 18;
+		int M = 9;
 		Cliente clientes[] = new Cliente[M];
 		for (int j, i = 0; i < M; i++) {
 			// Seleccionamos ya en qué caja se situara
